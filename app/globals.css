@@ -1,0 +1,223 @@
+:root {
+  --bg: #061226;
+  --bg-accent: #0b1f3d;
+  --card: #0f2748;
+  --text: #e9f1ff;
+  --muted: #a8bfdc;
+  --blue: #2d8cff;
+  --blue-soft: #7eb8ff;
+  --border: rgba(126, 184, 255, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top right, #123569 0%, var(--bg) 35%, #040a15 100%);
+  color: var(--text);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  min-height: 100%;
+}
+
+a {
+  color: var(--blue-soft);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: min(980px, 92vw);
+  margin: 32px auto 80px;
+  display: grid;
+  gap: 18px;
+}
+
+.card {
+  background: linear-gradient(145deg, rgba(15, 39, 72, 0.95), rgba(6, 18, 38, 0.9));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+}
+
+.hero {
+  padding: 34px 28px;
+}
+
+.eyebrow {
+  color: var(--blue-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  margin: 0 0 10px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin-top: 14px;
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 740px;
+}
+
+.heroLinks {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 24px;
+}
+
+h3 {
+  margin: 14px 0 8px;
+  font-size: 18px;
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.timeline {
+  display: grid;
+  gap: 14px;
+}
+
+.projectsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.projectItem {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: rgba(4, 14, 30, 0.62);
+  display: grid;
+  gap: 8px;
+}
+
+.projectRepo {
+  font-size: 14px;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.skillGroup {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: rgba(4, 14, 30, 0.62);
+}
+
+.skillList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skillTag {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #d7e6fd;
+  background: rgba(45, 140, 255, 0.12);
+}
+
+.job {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.job:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.period {
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: #d7e6fd;
+}
+
+.helperText {
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.chatForm {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.chatForm input {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(3, 10, 22, 0.78);
+  color: var(--text);
+  padding: 12px;
+  font-size: 15px;
+}
+
+.chatForm button {
+  border: none;
+  border-radius: 10px;
+  background: var(--blue);
+  color: #fff;
+  padding: 0 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chatForm button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.chatResult {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(4, 14, 30, 0.75);
+}
+
+@media (max-width: 720px) {
+  .chatForm {
+    grid-template-columns: 1fr;
+  }
+
+  .chatForm button {
+    height: 42px;
+  }
+}
