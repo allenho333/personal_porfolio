@@ -23,10 +23,11 @@ export async function POST(req: NextRequest) {
           : "openai");
 
     if (provider === "cloudflare") {
-      const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-      const token = process.env.CLOUDFLARE_API_TOKEN;
-      const model = process.env.CLOUDFLARE_MODEL || "@cf/meta/llama-3.1-8b-instruct";
+      const accountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim();
+      const token = process.env.CLOUDFLARE_API_TOKEN?.trim();
+      const model = (process.env.CLOUDFLARE_MODEL || "@cf/meta/llama-3.1-8b-instruct").trim();
       const normalizedModel = model.replace(/^\/+/, "");
+      const encodedModel = encodeURIComponent(normalizedModel);
       const hasPlaceholderAccountId =
         !accountId || accountId.includes("REPLACE_WITH") || accountId.includes("your_cloudflare");
       const hasPlaceholderToken =
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
       }
 
       const response = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${normalizedModel}`,
+        `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${encodedModel}`,
         {
           method: "POST",
           headers: {
@@ -70,7 +71,8 @@ export async function POST(req: NextRequest) {
             detail: errorText,
             debug: {
               accountIdSuffix: accountId.slice(-6),
-              model: normalizedModel
+              model: normalizedModel,
+              encodedModel
             }
           },
           { status: 502 }
