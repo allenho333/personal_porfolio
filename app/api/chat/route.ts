@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
       const token = process.env.CLOUDFLARE_API_TOKEN?.trim();
       const model = (process.env.CLOUDFLARE_MODEL || "@cf/meta/llama-3.1-8b-instruct").trim();
       const normalizedModel = model.replace(/^\/+/, "");
-      const encodedModel = encodeURIComponent(normalizedModel);
       const hasPlaceholderAccountId =
         !accountId || accountId.includes("REPLACE_WITH") || accountId.includes("your_cloudflare");
       const hasPlaceholderToken =
@@ -40,9 +39,8 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      const response = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${encodedModel}`,
-        {
+      async function runCloudflare(modelId: string) {
+        return fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${modelId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -60,8 +58,32 @@ export async function POST(req: NextRequest) {
               }
             ]
           })
+        });
+      }
+
+      let response = await runCloudflare(normalizedModel);
+
+      if (!response.ok) {
+        const firstErrorText = await response.text();
+        const isRouteError = firstErrorText.includes("\"code\":7000");
+        const shouldFallback = isRouteError && normalizedModel === "@cf/meta/llama-3.1-8b-instruct";
+
+        if (shouldFallback) {
+          response = await runCloudflare("@cf/meta/llama-3-8b-instruct");
+        } else {
+          return NextResponse.json(
+            {
+              error: `Cloudflare Workers AI request failed with status ${response.status}`,
+              detail: firstErrorText,
+              debug: {
+                accountIdSuffix: accountId.slice(-6),
+                model: normalizedModel
+              }
+            },
+            { status: 502 }
+          );
         }
-      );
+      }
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -71,8 +93,7 @@ export async function POST(req: NextRequest) {
             detail: errorText,
             debug: {
               accountIdSuffix: accountId.slice(-6),
-              model: normalizedModel,
-              encodedModel
+              model: normalizedModel
             }
           },
           { status: 502 }
